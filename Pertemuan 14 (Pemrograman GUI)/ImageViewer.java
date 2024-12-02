@@ -7,16 +7,23 @@ import java.io.File;
 public class ImageViewer extends JFrame {
     private JLabel imageLabel;
     private JButton loadButton;
+    private JScrollPane scrollPane;
 
     public ImageViewer() {
         setTitle("Photos");
-        setSize(300, 600);
+        setSize(600, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         imageLabel = new JLabel("", SwingConstants.CENTER);
-        add(imageLabel, BorderLayout.CENTER);
+        imageLabel.setVerticalAlignment(SwingConstants.TOP);
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        scrollPane = new JScrollPane(imageLabel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scrollPane, BorderLayout.CENTER);
 
         loadButton = new JButton("Buka file");
         add(loadButton, BorderLayout.SOUTH);
@@ -40,9 +47,10 @@ public class ImageViewer extends JFrame {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-            Image scaledImage = imageIcon.getImage().getScaledInstance(
-                    imageLabel.getWidth(), imageLabel.getHeight(), Image.SCALE_SMOOTH);
-            imageLabel.setIcon(new ImageIcon(scaledImage));
+
+            imageLabel.setIcon(imageIcon);
+            imageLabel.setPreferredSize(new Dimension(imageIcon.getIconWidth(), imageIcon.getIconHeight()));
+            imageLabel.revalidate();
         }
     }
 
